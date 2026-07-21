@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 # Database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# On Vercel, serverless filesystem is read-only except /tmp
+# On Vercel, if no explicit DATABASE_URL is provided, fall back to /tmp SQLite
 if not DATABASE_URL:
     if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
         DATABASE_URL = "sqlite:////tmp/ksb_admin.db"
