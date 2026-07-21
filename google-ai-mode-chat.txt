@@ -1,0 +1,85 @@
+https://share.google/aimode/xEg6nxignnH3M6u2Q
+
+
+vercel how many free project00:58On the Vercel Hobby (Free) Plan, you can create up to 200 free projects per account.However, you must keep the following critical free tier rules and resource limitations in mind:Key Usage RestrictionsPersonal Use Only: Free projects are strictly for personal, non-commercial use. If your website generates revenue, serves paying business clients, or contains commercial ads, you must upgrade to the Pro plan.Repository Deployment Limit: You can only create up to 3 Vercel projects from a single GitHub repository within a personal free account. You will need separate repositories if you have more projects.Domains: You are limited to 50 domains per project on the free tier.Daily & Hourly Free Account QuotasEven if you stay under 200 projects, your entire account shares these general deployment and build limits:Deployments per day: Max 100 deployments across your account every 24 hours.Deployments per hour: Max 100 deployments every 60 minutes.Deployments per 5 minutes: Max 60 deployments.If you exceed any of the official Vercel limits, your deployments or account may be temporarily paused until the next cycle. You can monitor your active resource consumption directly on your Vercel Account Dashboard.If you would like to know more, tell me:What type of application (e.g., Next.js, React, HTML static site) are you trying to build?Are you intending to host a personal project or a commercial website?9 sitesCan I use Vercel to create projects for my clients? - RedditYou've got a lot to consider: * Multiple Projects on Vercel: Yes, you can host multiple projects under one Vercel account. However...RedditLimits - VercelTable_title: General limits Table_content: | | Hobby | Enterprise | | --- | --- | --- | | Projects | 200 | Unlimited | | Deploymen...VercelVercel Hobby PlanTable_title: Comparing Hobby and Pro plans Table_content: | Feature | Hobby | Pro | | --- | --- | --- | | Domains per project | 50...VercelShow allYou said: AngularSpringbootAngularSpringboot00:59You cannot deploy a standard Spring Boot backend directly on Vercel because Vercel only hosts frontend frameworks, static websites, and serverless functions (like Node.js, Python, or Go).To make your application work, you must split it into a frontend project and a backend project, hosting them on separate platforms.Here is the exact blueprint to deploy your full-stack application for free:1. Angular Frontend (Deploy on Vercel)You can deploy your Angular app onto Vercel completely free under your 200-project limit.How to deploy: Connect your Git repository to the Vercel Dashboard, select Angular as your framework preset, and click deploy.Environment variables: Store your backend API URL in your Vercel project settings so your Angular services know where to send requests.2. Spring Boot Backend (Deploy Elsewhere)Since Vercel cannot run a continuous Java/Spring Boot server, you must host your backend on a cloud provider that supports Java, Docker, or JAR files.Free or budget-friendly options include:Render: Offers a Render Web Services Free Tier that supports Docker containers, which is perfect for running a packaged Spring Boot .jar file. Note that free instances spin down after inactivity.Railway: Provides an excellent developer platform. You can check the Railway Pricing Page for their affordable trial or developer tiers to run a continuous Spring Boot instance.Hugging Face Spaces: An alternative route where you can deploy Dockerized Spring Boot apps for free, though it is primarily designed for AI apps.3. Handle CORS (Cross-Origin Resource Sharing)Once deployed, your Angular frontend and Spring Boot backend will be on different domains. You must configure your Spring Boot application to allow requests from your Vercel domain.Add @CrossOrigin(origins = "https://vercel.app") to your Spring Boot REST controllers.If you want to start setting this up, let me know:Do you already have your Spring Boot app packaged into a JAR file or Docker image?Would you like step-by-step instructions on how to configure CORS in Spring Boot for Vercel?You said: Python ?? frame work?Python ?? frame work?01:00Vercel does support Python, but it handles Python differently than traditional web servers.Instead of running a continuous, always-on Python server, Vercel deploys Python code as Serverless Functions [1]. This means your Python backend code only spins up and runs when someone makes an API request [1].Here are the specific Python frameworks you can use on Vercel and how they work:Supported Python FrameworksFastAPI: The best and most popular choice for Vercel. It is highly optimized for asynchronous APIs and works perfectly within Vercel's Serverless Functions [1].Flask: Fully supported [1]. You can route all incoming requests to a single Flask application instance running inside a serverless function [1].Django: Possible, but not recommended. Django relies heavily on a persistent database connection and a continuous server, which does not align well with Vercel's temporary serverless environment.Critical Limitations for Python on VercelNo Continuous Tasks: Because it is serverless, your Python code cannot run permanent background tasks, web sockets, or long-running data processing scripts.Execution Time Limit: On the Vercel Hobby (Free) Plan, a single API request cannot take longer than 10 seconds to execute, or it will time out.WSGI to ASGI: You must use a routing file (like vercel.json) to direct traffic from your Angular frontend to your Python backend files [1].If you are thinking about switching your Spring Boot backend to Python, let me know:Would you like a minimal setup example for a FastAPI or Flask project on Vercel?Do you need help writing the vercel.json configuration file to link your Angular frontend to a Python API [1]?You said: vercel.jsonvercel.json01:01To deploy a combined Angular frontend and Python backend (like FastAPI or Flask) together on Vercel, you need a vercel.json configuration file.Place this vercel.json file in the root directory of your repository.The Project StructureFor this configuration to work, organize your repository like this:text├── vercel.json
+├── src/                <-- Your Angular source code
+├── angular.json
+├── package.json
+└── api/
+    └── index.py        <-- Your Python backend entry point
+Use code with caution.Complete vercel.json ConfigurationCopy and paste this exact configuration into your file:json{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+Use code with caution.How This Configuration Works"builds": Tells Vercel how to compile your code.It compiles your Angular frontend using your standard package.json build scripts.It recognizes api/index.py and builds it using Vercel's official Python serverless runtime."routes": Controls how traffic is directed.Any request starting with /api/ bypasses Angular and goes straight to your Python backend.handle: filesystem ensures that static Angular assets (like images or JavaScript files) are served directly if they exist.The final route is a fallback. It catches all other URLs and sends them to Angular's index.html so that Angular's internal routing functions properly without throwing 404 errors.Next Steps for PythonInside your api/ folder, make sure to include a requirements.txt file listing your Python dependencies (like fastapi or flask). Vercel will install them automatically during deployment.If you are ready to write the backend code, let me know:Are you choosing FastAPI or Flask for your Python API?Do you need a starter code example for your api/index.py file to match this configuration?You said: FastAPI or Flask whichis fastFastAPI or Flask whichis fast01:02FastAPI is significantly faster than Flask.According to standardized TechEmpower benchmarks, FastAPI handles roughly 15,000 to 20,000 requests per second, whereas Flask tops out around 2,000 to 3,000 requests per second on identical hardware. FastAPI's speed matches fast languages like Node.js and Go.Performance OverviewFeatureFastAPIFlaskSpeed/ThroughputExtremely Fast (15k–20k req/s)Moderate (2k–3k req/s)ArchitectureASGI (Native Asynchronous)WSGI (Synchronous by default)ConcurrencyHandles thousands of tasks in parallelProcesses tasks sequentially (blocks)Data ValidationHigh-speed automatic validation via Pydantic v2Requires manual slow parsing librariesWhy FastAPI is FasterNative Async (async/await): Flask handles requests sequentially. If 10 requests hit a Flask app, and each takes 1 second, the total time is 10 seconds. FastAPI handles all 10 requests concurrently, completing them in just 1 second.Non-Blocking I/O: FastAPI is perfect for network-bound tasks, like pulling database records, executing OpenAI/LLM prompts, or fetching external APIs. Instead of wasting computing power waiting for a response, the backend switches immediately to another request.Ultra-Fast Data Validation: FastAPI runs on Pydantic v2. Pydantic compiles structural data validations down to core Rust code, which formats and secures your JSON payloads instantly.Which one should you use on Vercel?You should choose FastAPI for your Vercel backend. Because Vercel Serverless Functions have strict execution timeout limits (10 seconds on the free tier), FastAPI's async speed prevents your API from running into timeouts under heavy traffic.If you would like to move forward, tell me:Would you like the starter FastAPI code snippet for your Vercel project?Do you need help setting up Angular HTTP requests to call your new API?14 sites​​FastAPI vs Flask 2025: Performance, Speed ... - StrapiFastAPI excels when serving machine-learning predictions, orchestrating microservices, or streaming data over WebSockets—scenarios...StrapiFastAPI vs Flask: 6-8x Faster + Auto Docs [2026] - Tech InsiderJuly 2026 Update: Three things have changed since this guide's April 2026 data was collected. First, the PyPI download rankings fl...tech-insider.orgFastAPI vs Flask (2026): Real Benchmarks and Async TruthFastAPI vs Flask: What the Download Numbers Don't Tell You. FastAPI now outdownloads Flask 2.4× monthly — but async isn't always f...pynions.comShow allYou said: So finally angular with fastapiSo finally angular with fastapi01:03That is a fantastic stack choice. Combining Angular’s robust frontend architecture with FastAPI’s high-speed backend creates a modern, highly performant full-stack application.Here is the exact boilerplate code you need to connect your Angular frontend and FastAPI backend inside your Vercel project repository.1. The FastAPI Backend (api/index.py)Create a folder named api in your root directory and save this file as index.py. This setup uses a wrapper so that Vercel's serverless environment can correctly read your FastAPI routing.pythonfrom fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
+
+# Configure CORS so your Angular app can safely make requests
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allows access from any domain (good for Vercel preview URLs)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "healthy", "framework": "FastAPI", "platform": "Vercel"}
+
+@app.get("/api/data")
+def get_data():
+    return {"message": "Hello from the FastAPI backend!", "items":}
+Use code with caution.2. The Dependencies (api/requirements.txt)Create a requirements.txt file inside the api folder so Vercel knows what to install.textfastapi
+pydantic
+Use code with caution.3. The Angular Frontend Service (data.service.ts)In your Angular application, you can use relative URLs (like /api/...) to call your backend. Because the vercel.json file we built earlier routes anything starting with /api/ directly to your Python code, you do not need to hardcode absolute URLs.typescriptimport { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+
+  constructor(private http: HttpClient) { }
+
+  // Fetches data seamlessly using Vercel's internal routing
+  getBackendData(): Observable<any> {
+    return this.http.get('/api/data');
+  }
+}
+Use code with caution.4. Deploying to VercelCommit all your changes (including the vercel.json in your root folder) to your GitHub repository.Go to your Vercel Dashboard and click Add New > Project.Import your Git repository.Vercel will auto-detect your project settings. Click Deploy.Would you like help setting up the Angular HttpClient module in your app config, or do you need assistance adding database connections into your FastAPI code?
+
+
+
+
+
+
+
+
+frontend - folder/projectname ksb-fe - Angular - Use Prime NG
+backend - folder/projectname ksb-fe - FastAPI

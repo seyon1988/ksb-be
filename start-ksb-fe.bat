@@ -1,0 +1,3 @@
+@echo off
+echo Starting KSB Angular Frontend (ksb-fe) on http://localhost:4200 ...
+start "KSB-Frontend" cmd /k "cd /d %~dp0ksb-fe && npm start"

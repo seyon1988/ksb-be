@@ -1,0 +1,3 @@
+@echo off
+echo Starting KSB FastAPI Backend (ksb-be) on http://localhost:8000 ...
+start "KSB-Backend" cmd /k "cd /d %~dp0 && conda run -n seyon uvicorn api.index:app --reload --port 8000"
