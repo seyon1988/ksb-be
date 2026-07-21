@@ -42,7 +42,12 @@ app.add_middleware(
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+@app.options("/{full_path:path}", include_in_schema=False)
+def options_handler(full_path: str):
+    return Response(status_code=200)
 
 @app.get("/")
 def root():
