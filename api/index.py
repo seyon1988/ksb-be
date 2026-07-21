@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import jwt
 sys.path.append(os.path.dirname(__file__))
 
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
@@ -43,6 +43,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/favicon.ico", include_in_schema=False)
+@app.get("/favicon.png", include_in_schema=False)
+def favicon():
+    return Response(status_code=204)
 
 @app.get("/api/health")
 def health_check():
