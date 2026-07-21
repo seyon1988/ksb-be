@@ -35,11 +35,11 @@ app = FastAPI(
     openapi_url="/api/openapi.json"
 )
 
-# Enable CORS for Angular frontend
+# Enable CORS for Angular frontend (Allows localhost:4200, Vercel, and all client origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
