@@ -144,15 +144,16 @@ def verify_token(current_admin: AdminUser = Depends(get_current_admin)):
         "username": current_admin.username
     }
 
+# Public Open Theme API Endpoints (No Token Required)
 @app.get("/api/settings/theme")
 def get_active_theme(db: Session = Depends(get_db)):
     setting = db.query(GlobalSetting).filter(GlobalSetting.key == "active_theme").first()
-    theme_id = setting.value if setting else "option-2"
+    theme_id = setting.value if setting else "theme-2"
     return {"theme_id": theme_id}
 
 @app.post("/api/settings/theme")
 def update_active_theme(req: dict, db: Session = Depends(get_db)):
-    theme_id = req.get("theme_id", "option-2")
+    theme_id = req.get("theme_id", "theme-2")
     setting = db.query(GlobalSetting).filter(GlobalSetting.key == "active_theme").first()
     if setting:
         setting.value = theme_id
