@@ -44,6 +44,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root():
+    return {
+        "status": "healthy",
+        "service": "KSB Construction API",
+        "docs": "/api/docs",
+        "health": "/api/health"
+    }
+
 @app.get("/favicon.ico", include_in_schema=False)
 @app.get("/favicon.png", include_in_schema=False)
 def favicon():
